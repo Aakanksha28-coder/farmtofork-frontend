@@ -21,6 +21,7 @@ import About from './pages/About';
 import FeaturesPage from './pages/FeaturesPage';
 import MarketPrices from './pages/MarketPrices';
 import Contact from './pages/Contact';
+import AdminMessages from './pages/AdminMessages';
 
 function App() {
   const [isDrawerOpen, setIsDrawerOpen] = React.useState(false);
@@ -85,6 +86,15 @@ function App() {
               element={
                 <ProtectedRoute roles={["farmer"]}>
                   <FarmerOrders />
+                </ProtectedRoute>
+              }
+            />
+            {/* Admin routes */}
+            <Route
+              path="/admin/messages"
+              element={
+                <ProtectedRoute roles={["admin"]}>
+                  <AdminMessages />
                 </ProtectedRoute>
               }
             />
