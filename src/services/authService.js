@@ -1,36 +1,10 @@
 import { API_BASE_URL as BASE_URL } from '../config/api';
-
-// Helper function to handle API responses
-const handleResponse = async (response) => {
-  const data = await response.json();
-  
-  if (!response.ok) {
-    const error = (data && data.message) || response.statusText;
-    throw new Error(error);
-  }
-  
-  return data;
-};
-
-// Get auth token from local storage
-const getAuthHeader = () => {
-  const token = localStorage.getItem('token');
-  return token ? { 'Authorization': `Bearer ${token}` } : {};
-};
-
-// Network-safe fetch wrapper
-const safeFetch = async (url, options) => {
-  try {
-    return await fetch(url, options);
-  } catch (err) {
-    throw new Error('Network error: unable to reach API');
-  }
-};
+import { handleResponse, getAuthHeader } from '../utils/apiHelper';
 
 // Login user with real API
 export const loginUser = async (email, password) => {
   try {
-    const response = await safeFetch(`${BASE_URL}/auth/login`, {
+    const response = await fetch(`${BASE_URL}/auth/login`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ email, password })
@@ -63,7 +37,7 @@ export const loginUser = async (email, password) => {
 // Register user with real API
 export const registerUser = async (userData) => {
   try {
-    const response = await safeFetch(`${BASE_URL}/auth/register`, {
+    const response = await fetch(`${BASE_URL}/auth/register`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(userData)
@@ -109,7 +83,7 @@ export const getCurrentUser = async () => {
       return null;
     }
     
-    const response = await safeFetch(`${BASE_URL}/auth/profile`, {
+    const response = await fetch(`${BASE_URL}/auth/profile`, {
       headers: {
         ...getAuthHeader()
       }

@@ -1,28 +1,6 @@
 import { API_BASE_URL as BASE_URL } from '../config/api';
+import { handleResponse, getAuthHeader } from '../utils/apiHelper';
 const API_URL = `${BASE_URL}/products`;
-
-const handleResponse = async (response) => {
-  const contentType = response.headers.get('content-type') || '';
-  // Gracefully handle empty responses
-  if (response.status === 204) return null;
-  if (response.status === 304) {
-    // Treat not-modified as empty list for GET collections
-    return [];
-  }
-  if (contentType.includes('application/json')) {
-    const data = await response.json();
-    if (!response.ok) throw new Error(data.message || 'Request failed');
-    return data;
-  } else {
-    const text = await response.text();
-    throw new Error(text || `Unexpected response (${response.status})`);
-  }
-};
-
-const getAuthHeader = () => {
-  const token = localStorage.getItem('token');
-  return token ? { 'Authorization': `Bearer ${token}` } : {};
-};
 
 export const createProduct = async (payload) => {
   const hasFile = payload && payload.imageFile instanceof File;

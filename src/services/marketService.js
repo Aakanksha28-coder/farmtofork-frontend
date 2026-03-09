@@ -1,16 +1,6 @@
 import { API_BASE_URL as BASE_URL } from '../config/api';
+import { handleResponse, getAuthHeader } from '../utils/apiHelper';
 const API_URL = `${BASE_URL}/market`;
-
-const handleResponse = async (response) => {
-  const data = await response.json();
-  if (!response.ok) throw new Error(data.message || 'Request failed');
-  return data;
-};
-
-const getAuthHeader = () => {
-  const token = localStorage.getItem('token');
-  return token ? { 'Authorization': `Bearer ${token}` } : {};
-};
 
 export const listPrices = async (category) => {
   const params = new URLSearchParams();
