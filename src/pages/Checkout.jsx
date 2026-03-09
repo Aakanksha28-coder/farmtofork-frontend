@@ -2,12 +2,14 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useCart } from '../contexts/CartContext';
 import { createOrder } from '../services/orderService';
+import { getCurrentPosition, reverseGeocode } from '../services/locationService';
 import './Checkout.css';
 
 const Checkout = () => {
   const { items, totals, clearCart } = useCart();
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
+  const [detectingLocation, setDetectingLocation] = useState(false);
   const [error, setError] = useState('');
   const [form, setForm] = useState({
     shippingAddress: '',
@@ -31,6 +33,34 @@ const Checkout = () => {
   const handleChange = (e) => {
     const { name, value } = e.target;
     setForm(prev => ({ ...prev, [name]: value }));
+  };
+
+  const handleDetectLocation = async () => {
+    try {
+      setError('');
+      setDetectingLocation(true);
+      
+      // Get current position
+      const coords = await getCurrentPosition();
+      
+      // Reverse geocode to get address
+      const locationInfo = await reverseGeocode(coords);
+      
+      // Auto-fill the form with detected location
+      setForm(prev => ({
+        ...prev,
+        shippingAddress: locationInfo.displayAddress || `${locationInfo.city}, ${locationInfo.state}`,
+        city: locationInfo.city || prev.city,
+        state: locationInfo.state || prev.state,
+        postalCode: locationInfo.postcode || prev.postalCode
+      }));
+      
+    } catch (err) {
+      setError('Unable to detect location. Please allow location access or fill manually.');
+      console.error('Location detection error:', err);
+    } finally {
+      setDetectingLocation(false);
+    }
   };
 
   const handleSubmit = async (e) => {
@@ -76,6 +106,30 @@ const Checkout = () => {
       <div className="checkout-grid">
         <div className="checkout-form">
           <h2>Shipping Information</h2>
+          
+          {/* Detect Location Button */}
+          <div className="detect-location-section">
+            <button 
+              type="button" 
+              className="btn btn-secondary detect-location-btn" 
+              onClick={handleDetectLocation}
+              disabled={detectingLocation}
+            >
+              {detectingLocation ? (
+                <>
+                  <span className="spinner"></span>
+                  Detecting location...
+                </>
+              ) : (
+                <>
+                  <span className="location-icon">📍</span>
+                  Use My Current Location
+                </>
+              )}
+            </button>
+            <p className="hint">Click to auto-fill your address using GPS</p>
+          </div>
+          
           <form onSubmit={handleSubmit}>
             <div className="form-group">
               <label htmlFor="shippingAddress">Address</label>
@@ -84,7 +138,8 @@ const Checkout = () => {
                 id="shippingAddress" 
                 name="shippingAddress" 
                 value={form.shippingAddress} 
-                onChange={handleChange} 
+                onChange={handleChange}
+                placeholder="Street address, apartment, suite, etc."
                 required 
               />
             </div>
@@ -97,7 +152,8 @@ const Checkout = () => {
                   id="city" 
                   name="city" 
                   value={form.city} 
-                  onChange={handleChange} 
+                  onChange={handleChange}
+                  placeholder="Enter city"
                   required 
                 />
               </div>
@@ -109,7 +165,8 @@ const Checkout = () => {
                   id="state" 
                   name="state" 
                   value={form.state} 
-                  onChange={handleChange} 
+                  onChange={handleChange}
+                  placeholder="Enter state"
                   required 
                 />
               </div>
@@ -123,7 +180,8 @@ const Checkout = () => {
                   id="postalCode" 
                   name="postalCode" 
                   value={form.postalCode} 
-                  onChange={handleChange} 
+                  onChange={handleChange}
+                  placeholder="Enter postal code"
                   required 
                 />
               </div>
@@ -135,7 +193,8 @@ const Checkout = () => {
                   id="phone" 
                   name="phone" 
                   value={form.phone} 
-                  onChange={handleChange} 
+                  onChange={handleChange}
+                  placeholder="Enter phone number"
                   required 
                 />
               </div>
