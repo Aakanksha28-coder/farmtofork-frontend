@@ -1,5 +1,4 @@
-// Base API URL - replace with your actual backend URL
-const BASE_URL = process.env.REACT_APP_API_BASE_URL || 'http://localhost:5000/api';
+import { API_BASE_URL as BASE_URL } from '../config/api';
 
 // Helper function to handle API responses
 const handleResponse = async (response) => {
@@ -19,10 +18,19 @@ const getAuthHeader = () => {
   return token ? { 'Authorization': `Bearer ${token}` } : {};
 };
 
+// Network-safe fetch wrapper
+const safeFetch = async (url, options) => {
+  try {
+    return await fetch(url, options);
+  } catch (err) {
+    throw new Error('Network error: unable to reach API');
+  }
+};
+
 // Login user with real API
 export const loginUser = async (email, password) => {
   try {
-    const response = await fetch(`${BASE_URL}/auth/login`, {
+    const response = await safeFetch(`${BASE_URL}/auth/login`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ email, password })
@@ -30,15 +38,13 @@ export const loginUser = async (email, password) => {
     
     const data = await handleResponse(response);
 
-    // Normalize possible response shapes: { token, user } or top-level fields
-    const token = data?.token || data?.data?.token;
-    const userRaw = data?.user || data?.data?.user || data;
-
+    // Backend returns: { _id, name, email, role, token }
+    const token = data?.token;
     const userData = {
-      _id: userRaw?._id,
-      name: userRaw?.name || userRaw?.username || userRaw?.fullName || '',
-      email: userRaw?.email,
-      role: userRaw?.role
+      _id: data?._id,
+      name: data?.name || '',
+      email: data?.email,
+      role: data?.role || 'customer'
     };
 
     // Save token and user to localStorage
@@ -57,7 +63,7 @@ export const loginUser = async (email, password) => {
 // Register user with real API
 export const registerUser = async (userData) => {
   try {
-    const response = await fetch(`${BASE_URL}/auth/register`, {
+    const response = await safeFetch(`${BASE_URL}/auth/register`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(userData)
@@ -65,15 +71,13 @@ export const registerUser = async (userData) => {
     
     const data = await handleResponse(response);
 
-    // Normalize possible response shapes
-    const token = data?.token || data?.data?.token;
-    const userRaw = data?.user || data?.data?.user || data;
-
+    // Backend returns: { _id, name, email, role, token }
+    const token = data?.token;
     const createdUser = {
-      _id: userRaw?._id,
-      name: userRaw?.name || userRaw?.username || userRaw?.fullName || '',
-      email: userRaw?.email,
-      role: userRaw?.role
+      _id: data?._id,
+      name: data?.name || '',
+      email: data?.email,
+      role: data?.role || 'customer'
     };
 
     // Save token and user to localStorage
@@ -105,7 +109,7 @@ export const getCurrentUser = async () => {
       return null;
     }
     
-    const response = await fetch(`${BASE_URL}/auth/profile`, {
+    const response = await safeFetch(`${BASE_URL}/auth/profile`, {
       headers: {
         ...getAuthHeader()
       }

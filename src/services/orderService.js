@@ -1,4 +1,4 @@
-const BASE_URL = process.env.REACT_APP_API_BASE_URL || 'http://localhost:5000/api';
+import { API_BASE_URL as BASE_URL } from '../config/api';
 const API_URL = `${BASE_URL}/orders`;
 
 const handleResponse = async (response) => {
@@ -42,11 +42,5 @@ export const updateOrderStatus = async (id, status, note) => {
     headers: { 'Content-Type': 'application/json', ...getAuthHeader() },
     body: JSON.stringify({ status, note })
   });
-  return handleResponse(response);
-};
-
-export const getOrderLocation = async (id) => {
-  const response = await fetch(`${API_URL}/${id}/location`, { headers: { ...getAuthHeader() } });
-  if (response.status === 404) return null;
   return handleResponse(response);
 };

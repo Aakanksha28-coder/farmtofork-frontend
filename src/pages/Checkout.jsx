@@ -2,7 +2,6 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useCart } from '../contexts/CartContext';
 import { createOrder } from '../services/orderService';
-import LocationSelector from '../components/LocationSelector';
 import './Checkout.css';
 
 const Checkout = () => {
@@ -12,7 +11,6 @@ const Checkout = () => {
   const [error, setError] = useState('');
   const [form, setForm] = useState({
     shippingAddress: '',
-    location: { country: '', state: '', district: '', city: '', postcode: '' },
     city: '',
     state: '',
     postalCode: '',
@@ -48,19 +46,17 @@ const Checkout = () => {
       }));
 
       const orderData = {
-      items: orderItems,
-      shippingAddress: {
-      address: form.shippingAddress,
-      country: form.location.country,
-      state: form.location.state || form.state,
-      district: form.location.district,
-      city: form.location.city || form.city,
-      postalCode: form.location.postcode || form.postalCode,
-      phone: form.phone
-      },
-      paymentMethod: form.paymentMethod,
-      shippingPrice: totals.shipping,
-      totalPrice: totals.total
+        items: orderItems,
+        shippingAddress: {
+          address: form.shippingAddress,
+          city: form.city,
+          state: form.state,
+          postalCode: form.postalCode,
+          phone: form.phone
+        },
+        paymentMethod: form.paymentMethod,
+        shippingPrice: totals.shipping,
+        totalPrice: totals.total
       };
 
       const order = await createOrder(orderData);
@@ -93,21 +89,56 @@ const Checkout = () => {
               />
             </div>
             
-            <LocationSelector
-              value={form.location}
-              onChange={(loc) => setForm(prev => ({ ...prev, location: loc, city: loc.city, state: loc.state, postalCode: loc.postcode }))}
-            />
+            <div className="form-row">
+              <div className="form-group">
+                <label htmlFor="city">City</label>
+                <input 
+                  type="text" 
+                  id="city" 
+                  name="city" 
+                  value={form.city} 
+                  onChange={handleChange} 
+                  required 
+                />
+              </div>
+              
+              <div className="form-group">
+                <label htmlFor="state">State</label>
+                <input 
+                  type="text" 
+                  id="state" 
+                  name="state" 
+                  value={form.state} 
+                  onChange={handleChange} 
+                  required 
+                />
+              </div>
+            </div>
             
-            <div className="form-group">
-              <label htmlFor="phone">Phone</label>
-              <input 
-                type="tel" 
-                id="phone" 
-                name="phone" 
-                value={form.phone} 
-                onChange={handleChange} 
-                required 
-              />
+            <div className="form-row">
+              <div className="form-group">
+                <label htmlFor="postalCode">Postal Code</label>
+                <input 
+                  type="text" 
+                  id="postalCode" 
+                  name="postalCode" 
+                  value={form.postalCode} 
+                  onChange={handleChange} 
+                  required 
+                />
+              </div>
+              
+              <div className="form-group">
+                <label htmlFor="phone">Phone</label>
+                <input 
+                  type="tel" 
+                  id="phone" 
+                  name="phone" 
+                  value={form.phone} 
+                  onChange={handleChange} 
+                  required 
+                />
+              </div>
             </div>
             
             <h2>Payment Method</h2>

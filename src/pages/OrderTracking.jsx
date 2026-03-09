@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
-import { getOrderById, getOrderLocation } from '../services/orderService';
-import MapView from '../components/MapView';
+import { getOrderById } from '../services/orderService';
 import './OrderTracking.css';
 
 const OrderTracking = () => {
@@ -9,7 +8,6 @@ const OrderTracking = () => {
   const [order, setOrder] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
-  const [liveLocation, setLiveLocation] = useState(null);
 
   useEffect(() => {
     const fetchOrder = async () => {
@@ -27,27 +25,6 @@ const OrderTracking = () => {
     if (id) fetchOrder();
   }, [id]);
 
-  useEffect(() => {
-    let timer;
-    const startPolling = async () => {
-      if (!id) return;
-      const poll = async () => {
-        try {
-          const loc = await getOrderLocation(id);
-          if (loc && typeof loc.lat === 'number' && typeof loc.lng === 'number') {
-            setLiveLocation({ lat: loc.lat, lng: loc.lng });
-          }
-        } catch (e) {
-          // ignore; backend might not support live location yet
-        }
-      };
-      await poll();
-      timer = setInterval(poll, 10000);
-    };
-    startPolling();
-    return () => timer && clearInterval(timer);
-  }, [id]);
-
   if (loading) return <div className="container tracking">Loading order details...</div>;
   if (error) return <div className="container tracking error">{error}</div>;
   if (!order) return <div className="container tracking">Order not found</div>;
@@ -56,7 +33,6 @@ const OrderTracking = () => {
   const tracking = Array.isArray(order.tracking) ? order.tracking : [];
   const shipping = order.shippingAddress || {};
 
-  const center = liveLocation || { lat: 20.5937, lng: 78.9629 }; // default India center
   return (
     <div className="container tracking">
       <h1>Order #{shortId}</h1>
@@ -106,15 +82,6 @@ const OrderTracking = () => {
             <p><strong>Status:</strong> {order.isPaid ? 'Paid' : 'Not Paid'}</p>
             {order.isPaid && order.paidAt && (
               <p><strong>Paid At:</strong> {new Date(order.paidAt).toLocaleString()}</p>
-            )}
-          </div>
-
-          <div className="live-map">
-            <h2>Live Location</h2>
-            {liveLocation ? (
-              <MapView center={center} marker={liveLocation} />
-            ) : (
-              <div className="map-unavailable">Live location unavailable</div>
             )}
           </div>
         </div>
