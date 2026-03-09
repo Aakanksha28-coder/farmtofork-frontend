@@ -92,7 +92,7 @@ const SignUp = () => {
       await register(userData);
       navigate('/');
     } catch (err) {
-      setError('Failed to create an account. ' + (err.message || ''));
+      setError(err.message || 'Failed to create an account. Please try again.');
       console.error(err);
     } finally {
       setLoading(false);
