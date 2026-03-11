@@ -2,6 +2,7 @@ import React, { useEffect, useState, useMemo } from 'react';
 import { useAuth } from '../contexts/AuthContext';
 import { createProduct, getMyProducts, updateProduct, deleteProduct } from '../services/productService';
 import { getNegotiationsForProduct, postMessage as postNegotiationMessage, acceptNegotiation } from '../services/negotiationService';
+import { getMarketPriceForValidation } from '../services/marketService';
 import ProtectedRoute from '../components/ProtectedRoute';
 import './FarmerDashboard.css';
 import { API_ORIGIN } from '../config/api';
@@ -12,6 +13,9 @@ const FarmerDashboardContent = () => {
   const [form, setForm] = useState({ name: '', description: '', price: '', quantity: '', unit: 'kg', offer: '', isUpcoming: false, availableDate: '', imageFile: null });
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
+  const [marketPrice, setMarketPrice] = useState(null);
+  const [checkingPrice, setCheckingPrice] = useState(false);
+  const [priceWarning, setPriceWarning] = useState('');
 
   // Edit state
   const [editingId, setEditingId] = useState(null);
@@ -93,11 +97,72 @@ const FarmerDashboardContent = () => {
     } else {
       setForm(prev => ({ ...prev, [name]: type === 'checkbox' ? checked : value }));
     }
+    
+    // Check market price when product name or price changes
+    if (name === 'name' && value.trim().length > 2) {
+      checkMarketPrice(value);
+    }
+    if (name === 'price' && marketPrice) {
+      validatePrice(Number(value));
+    }
+  };
+
+  const checkMarketPrice = async (productName) => {
+    if (!productName || productName.trim().length < 3) return;
+    
+    try {
+      setCheckingPrice(true);
+      setPriceWarning('');
+      
+      // Get farmer's state from user profile
+      const farmerState = currentUser?.roleSpecificData?.farmLocation?.state;
+      
+      const result = await getMarketPriceForValidation(productName, farmerState);
+      setMarketPrice(result);
+      
+      // Validate current price if already entered
+      if (form.price) {
+        validatePrice(Number(form.price), result.price);
+      }
+    } catch (err) {
+      // No market price found - that's okay
+      setMarketPrice(null);
+      setPriceWarning('');
+    } finally {
+      setCheckingPrice(false);
+    }
+  };
+
+  const validatePrice = (enteredPrice, marketPriceValue = marketPrice?.price) => {
+    if (!marketPriceValue || !enteredPrice) {
+      setPriceWarning('');
+      return true;
+    }
+    
+    const maxAllowedPrice = marketPriceValue * 1.1; // Allow 10% above market price
+    
+    if (enteredPrice > maxAllowedPrice) {
+      setPriceWarning(`⚠️ Your price (₹${enteredPrice}) is higher than the market price (₹${marketPriceValue.toFixed(2)}). Maximum allowed: ₹${maxAllowedPrice.toFixed(2)}`);
+      return false;
+    } else if (enteredPrice > marketPriceValue) {
+      setPriceWarning(`ℹ️ Your price is ${((enteredPrice / marketPriceValue - 1) * 100).toFixed(1)}% above market price (₹${marketPriceValue.toFixed(2)})`);
+      return true;
+    } else {
+      setPriceWarning('');
+      return true;
+    }
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError('');
+    
+    // Validate price against market price
+    if (marketPrice && !validatePrice(Number(form.price))) {
+      setError('Price exceeds maximum allowed limit based on market rates');
+      return;
+    }
+    
     setLoading(true);
     try {
       const payload = {
@@ -113,6 +178,8 @@ const FarmerDashboardContent = () => {
       };
       await createProduct(payload);
       setForm({ name: '', description: '', price: '', quantity: '', unit: 'kg', offer: '', isUpcoming: false, availableDate: '', imageFile: null });
+      setMarketPrice(null);
+      setPriceWarning('');
       await loadMyProducts();
     } catch (err) {
       setError(err.message || 'Failed to create product');
@@ -367,8 +434,20 @@ const FarmerDashboardContent = () => {
             <input name="description" value={form.description} onChange={handleChange} />
           </div>
           <div>
-            <label>Price</label>
+            <label>Price (₹ per {form.unit})</label>
             <input name="price" type="number" step="0.01" value={form.price} onChange={handleChange} required />
+            {checkingPrice && <div className="hint">Checking market price...</div>}
+            {marketPrice && !checkingPrice && (
+              <div className="market-price-info">
+                <span className="market-price-label">Market Price: ₹{marketPrice.price.toFixed(2)}/{form.unit}</span>
+                {marketPrice.state && <span className="market-price-source"> ({marketPrice.state})</span>}
+              </div>
+            )}
+            {priceWarning && (
+              <div className={priceWarning.startsWith('⚠️') ? 'price-warning error' : 'price-warning info'}>
+                {priceWarning}
+              </div>
+            )}
           </div>
           <div>
             <label>Quantity</label>

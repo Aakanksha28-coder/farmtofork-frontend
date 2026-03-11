@@ -34,3 +34,13 @@ export const getIndianPrices = async ({ commodity, state, market, limit } = {}) 
   const response = await fetch(`${API_URL}/india/prices?${params.toString()}`);
   return handleResponse(response);
 };
+
+
+// Get market price for validation
+export const getMarketPriceForValidation = async (productName, state) => {
+  const params = new URLSearchParams();
+  if (productName) params.set('productName', productName);
+  if (state) params.set('state', state);
+  const response = await fetch(`${API_URL}/validate-price?${params.toString()}`);
+  return handleResponse(response);
+};
