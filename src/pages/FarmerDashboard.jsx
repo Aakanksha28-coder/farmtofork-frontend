@@ -98,10 +98,16 @@ const FarmerDashboardContent = () => {
       setForm(prev => ({ ...prev, [name]: type === 'checkbox' ? checked : value }));
     }
     
-    // Check market price when product name or price changes
-    if (name === 'name' && value.trim().length > 2) {
-      checkMarketPrice(value);
+    // Check market price when product name changes (after 3 characters)
+    if (name === 'name' && value.trim().length >= 3) {
+      // Debounce the API call
+      if (window.priceCheckTimeout) clearTimeout(window.priceCheckTimeout);
+      window.priceCheckTimeout = setTimeout(() => {
+        checkMarketPrice(value);
+      }, 500); // Wait 500ms after user stops typing
     }
+    
+    // Validate price when it changes
     if (name === 'price' && marketPrice) {
       validatePrice(Number(value));
     }
@@ -117,7 +123,10 @@ const FarmerDashboardContent = () => {
       // Get farmer's state from user profile
       const farmerState = currentUser?.roleSpecificData?.farmLocation?.state;
       
+      console.log('Checking market price for:', productName, 'State:', farmerState);
+      
       const result = await getMarketPriceForValidation(productName, farmerState);
+      console.log('Market price result:', result);
       setMarketPrice(result);
       
       // Validate current price if already entered
@@ -125,9 +134,16 @@ const FarmerDashboardContent = () => {
         validatePrice(Number(form.price), result.price);
       }
     } catch (err) {
-      // No market price found - that's okay
+      // No market price found or backend not available
+      console.log('Market price check failed:', err.message);
       setMarketPrice(null);
-      setPriceWarning('');
+      
+      // Show info message if backend is not available
+      if (err.message && err.message.includes('404')) {
+        setPriceWarning('ℹ️ Market price validation is currently unavailable. Please set a fair price.');
+      } else {
+        setPriceWarning('');
+      }
     } finally {
       setCheckingPrice(false);
     }
@@ -157,8 +173,8 @@ const FarmerDashboardContent = () => {
     e.preventDefault();
     setError('');
     
-    // Validate price against market price
-    if (marketPrice && !validatePrice(Number(form.price))) {
+    // Only validate price if market price was successfully fetched
+    if (marketPrice && marketPrice.price && !validatePrice(Number(form.price))) {
       setError('Price exceeds maximum allowed limit based on market rates');
       return;
     }
@@ -428,6 +444,15 @@ const FarmerDashboardContent = () => {
           <div>
             <label>Name</label>
             <input name="name" value={form.name} onChange={handleChange} required />
+            <button 
+              type="button" 
+              className="btn btn-secondary" 
+              style={{ marginTop: '0.5rem', fontSize: '0.85rem', padding: '0.4rem 0.8rem' }}
+              onClick={() => form.name && checkMarketPrice(form.name)}
+              disabled={!form.name || checkingPrice}
+            >
+              {checkingPrice ? 'Checking...' : 'Check Market Price'}
+            </button>
           </div>
           <div>
             <label>Description</label>
