@@ -65,3 +65,49 @@
   margin-top: 0.25rem;
   font-style: italic;
 }
+
+.file-upload { grid-column: span 2; }
+.file-upload .preview { margin-top: 0.5rem; }
+.file-upload .preview img { width: 160px; height: 120px; object-fit: cover; border-radius: 6px; border: 1px solid #eee; }
+.fd-submit { margin-top: 0.75rem; }
+.product-list { list-style:none; padding:0; margin:1rem 0; }
+.product-item { padding:0.75rem; border-bottom:1px solid #eee; }
+.product-row { display: flex; align-items:center; gap: 0.75rem; margin-bottom: 0.5rem; }
+.thumb img { width: 64px; height: 48px; object-fit: cover; border-radius: 4px; }
+.placeholder { width:64px; height:48px; border-radius:4px; background: linear-gradient(135deg, #f2f2f2, #e8e8e8); }
+.actions { display:flex; gap:0.5rem; flex-wrap: wrap; }
+.badge { display:inline-block; margin-left:0.5rem; background:#ffd54f; color:#333; padding:0.15rem 0.4rem; border-radius:4px; font-size:0.75rem; }
+.section { margin-top: 1rem; }
+.section-title { font-size: 1.25rem; margin-bottom: 0.5rem; }
+.filters { display:flex; align-items:center; gap:0.5rem; margin: 1rem 0; }
+.empty { color:#777; padding:0.5rem 0; }
+.offer { color: #e67e22; font-size: 0.85rem; }
+.negotiations { background: #f9f9f9; border-radius: 6px; padding: 0.75rem; }
+.negotiation-card { background: #fff; border: 1px solid #eee; border-radius: 6px; padding: 0.75rem; margin-bottom: 0.5rem; }
+.neg-meta { font-size: 0.85rem; color: #555; margin-bottom: 0.5rem; }
+.messages { list-style: none; padding: 0; margin: 0 0 0.5rem; font-size: 0.85rem; }
+.neg-actions { margin-top: 0.5rem; }
+.inline-form { display: flex; gap: 0.5rem; align-items: center; }
+.inline-form input { flex: 1; padding: 0.4rem 0.6rem; border: 1px solid #ddd; border-radius: 4px; font-size: 0.85rem; }
+
+/* Market price feedback */
+.price-checking { display:block; margin-top:4px; color:#888; font-size:0.78rem; }
+.price-market-ref { display:block; margin-top:4px; color:#555; font-size:0.78rem; }
+.price-ok { display:block; margin-top:4px; color:#28a745; font-size:0.78rem; font-weight:600; }
+.price-warn { display:block; margin-top:4px; color:#fd7e14; font-size:0.78rem; font-weight:600; }
+.price-error { display:block; margin-top:4px; color:#dc3545; font-size:0.78rem; font-weight:700; }
+
+/* Popup modal */
+.popup-overlay { position:fixed; inset:0; background:rgba(0,0,0,0.55); display:flex; align-items:center; justify-content:center; z-index:9999; animation:fdFadeIn 0.15s ease; }
+@keyframes fdFadeIn { from{opacity:0} to{opacity:1} }
+.popup-modal { background:#fff; border-radius:12px; width:90%; max-width:420px; box-shadow:0 20px 60px rgba(0,0,0,0.25); overflow:hidden; animation:fdSlideUp 0.2s ease; }
+@keyframes fdSlideUp { from{transform:translateY(20px);opacity:0} to{transform:translateY(0);opacity:1} }
+.popup-header { display:flex; align-items:center; justify-content:space-between; padding:1rem 1.25rem 0.75rem; border-bottom:1px solid #eee; }
+.popup-error .popup-header { background:#fff5f5; border-bottom-color:#ffd0d0; }
+.popup-header h3 { margin:0; font-size:1rem; }
+.popup-error .popup-header h3 { color:#c0392b; }
+.popup-close { background:none; border:none; font-size:1.1rem; cursor:pointer; color:#888; padding:0 4px; line-height:1; }
+.popup-close:hover { color:#333; }
+.popup-body { padding:1rem 1.25rem; }
+.popup-body p { margin:0.2rem 0; font-size:0.9rem; color:#444; line-height:1.5; }
+.popup-footer { padding:0.75rem 1.25rem 1rem; display:flex; justify-content:flex-end; }
