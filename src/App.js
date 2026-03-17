@@ -23,6 +23,7 @@ import MarketPrices from './pages/MarketPrices';
 import Contact from './pages/Contact';
 import AdminMessages from './pages/AdminMessages';
 import Chatbot from './components/Chatbot';
+import PoojaProducts from './pages/PoojaProducts';
 
 function App() {
   const [isDrawerOpen, setIsDrawerOpen] = React.useState(false);
@@ -71,6 +72,7 @@ function App() {
             <Route path="/market-prices" element={<MarketPrices />} />
             <Route path="/contact" element={<Contact />} />
             <Route path="/impact" element={<Impact />} />
+            <Route path="/pooja-products" element={<PoojaProducts />} />
             <Route path="/add-story" element={<ProtectedRoute><StoryForm /></ProtectedRoute>} />
 
             {/* Farmer routes */}

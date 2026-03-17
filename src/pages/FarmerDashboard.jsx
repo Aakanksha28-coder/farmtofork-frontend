@@ -10,7 +10,7 @@ import { API_ORIGIN } from '../config/api';
 const FarmerDashboardContent = () => {
   const { currentUser } = useAuth();
   const [products, setProducts] = useState([]);
-  const [form, setForm] = useState({ name: '', description: '', price: '', quantity: '', unit: 'kg', offer: '', isUpcoming: false, availableDate: '', imageFile: null });
+  const [form, setForm] = useState({ name: '', description: '', price: '', quantity: '', unit: 'kg', offer: '', isUpcoming: false, availableDate: '', imageFile: null, category: 'general', isOrganic: false, suitableFor: '', specialNotes: '', tags: '' });
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
 
@@ -168,9 +168,14 @@ const FarmerDashboardContent = () => {
         price: Number(form.price), quantity: Number(form.quantity),
         unit: form.unit, offer: form.offer, isUpcoming: form.isUpcoming,
         availableDate: form.availableDate || undefined,
-        imageFile: form.imageFile || undefined
+        imageFile: form.imageFile || undefined,
+        category: form.category || 'general',
+        isOrganic: form.isOrganic,
+        suitableFor: form.suitableFor || undefined,
+        specialNotes: form.specialNotes || undefined,
+        tags: form.tags || undefined
       });
-      setForm({ name: '', description: '', price: '', quantity: '', unit: 'kg', offer: '', isUpcoming: false, availableDate: '', imageFile: null });
+      setForm({ name: '', description: '', price: '', quantity: '', unit: 'kg', offer: '', isUpcoming: false, availableDate: '', imageFile: null, category: 'general', isOrganic: false, suitableFor: '', specialNotes: '', tags: '' });
       setMarketPrice(null); setPriceStatus(null);
       await loadMyProducts();
     } catch (err) {
@@ -401,6 +406,34 @@ const FarmerDashboardContent = () => {
             <input name="imageFile" type="file" accept="image/*" onChange={handleChange} />
             {form.imageFile && <div className="preview"><img src={URL.createObjectURL(form.imageFile)} alt="Preview" /></div>}
           </div>
+          {/* ── Category ── */}
+          <div>
+            <label>Category</label>
+            <select name="category" value={form.category} onChange={handleChange}>
+              <option value="general">General</option>
+              <option value="pooja">🪔 Pooja Paath</option>
+            </select>
+          </div>
+          {/* ── Pooja-specific fields ── */}
+          {form.category === 'pooja' && (
+            <>
+              <div>
+                <label><input type="checkbox" name="isOrganic" checked={form.isOrganic} onChange={handleChange} /> 🌿 Organic</label>
+              </div>
+              <div>
+                <label>Suitable For (e.g. Ganesh Puja, Diwali)</label>
+                <input name="suitableFor" value={form.suitableFor} onChange={handleChange} placeholder="e.g. Ganesh Chaturthi, Daily Pooja" />
+              </div>
+              <div>
+                <label>Special Notes</label>
+                <input name="specialNotes" value={form.specialNotes} onChange={handleChange} placeholder="e.g. Temple-grade quality" />
+              </div>
+              <div>
+                <label>Tags (comma-separated)</label>
+                <input name="tags" value={form.tags} onChange={handleChange} placeholder="e.g. organic, festival-special, temple-grade" />
+              </div>
+            </>
+          )}
         </div>
         {error && <div className="error">{error}</div>}
         <button type="submit" disabled={loading || priceStatus === 'exceeded'} className="btn btn-primary fd-submit">
