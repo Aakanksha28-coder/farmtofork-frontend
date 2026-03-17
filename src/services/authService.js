@@ -18,7 +18,8 @@ export const loginUser = async (email, password) => {
       _id: data?._id,
       name: data?.name || '',
       email: data?.email,
-      role: data?.role || 'customer'
+      role: data?.role || 'customer',
+      whatsapp: data?.whatsapp || ''
     };
 
     // Save token and user to localStorage
@@ -51,7 +52,8 @@ export const registerUser = async (userData) => {
       _id: data?._id,
       name: data?.name || '',
       email: data?.email,
-      role: data?.role || 'customer'
+      role: data?.role || 'customer',
+      whatsapp: data?.whatsapp || ''
     };
 
     // Save token and user to localStorage
