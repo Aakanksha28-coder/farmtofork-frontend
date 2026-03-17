@@ -23,8 +23,8 @@ const SignIn = () => {
     try {
       setError('');
       setLoading(true);
-      await login(email, password);
-      navigate('/');
+      const user = await login(email, password);
+      navigate(user?.role === 'farmer' ? '/farmer' : '/');
     } catch (err) {
       setError(err.message || 'Failed to sign in. Please check your credentials.');
       console.error(err);

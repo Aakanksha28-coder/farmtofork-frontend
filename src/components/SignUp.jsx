@@ -89,8 +89,8 @@ const SignUp = () => {
         };
       }
       
-      await register(userData);
-      navigate('/');
+      const user = await register(userData);
+      navigate(user?.role === 'farmer' ? '/farmer' : '/');
     } catch (err) {
       setError(err.message || 'Failed to create an account. Please try again.');
       console.error(err);
