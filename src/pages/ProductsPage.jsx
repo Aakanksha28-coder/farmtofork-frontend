@@ -8,6 +8,16 @@ import { useNavigate } from 'react-router-dom';
 import Toast from '../components/Toast';
 import { API_ORIGIN } from '../config/api';
 
+const CATEGORIES = [
+  { value: '', label: '🛒 All' },
+  { value: 'vegetable', label: '🥦 Vegetables' },
+  { value: 'fruits',    label: '🍎 Fruits' },
+  { value: 'flowers',   label: '🌸 Flowers' },
+  { value: 'pooja',     label: '🪔 Pooja Paath' },
+];
+
+const POOJA_BADGE = <span style={{ fontSize: '11px', background: 'linear-gradient(90deg,#ff6f00,#ffa000)', color: '#fff', borderRadius: '12px', padding: '2px 8px', fontWeight: 700, marginLeft: '6px' }}>🪔 Pooja</span>;
+
 const ProductsPage = () => {
   const { addItem } = useCart();
   const { currentUser, isAuthenticated } = useAuth();
@@ -18,6 +28,7 @@ const ProductsPage = () => {
   const [error, setError] = useState('');
   const [search, setSearch] = useState('');
   const [unit, setUnit] = useState('');
+  const [category, setCategory] = useState('');
   const [upcomingOnly, setUpcomingOnly] = useState(false);
   const [minPrice, setMinPrice] = useState('');
   const [maxPrice, setMaxPrice] = useState('');
@@ -31,7 +42,7 @@ const ProductsPage = () => {
       setError('');
       setLoading(true);
       try {
-        const list = await getProducts({});
+        const list = await getProducts({ category: category || undefined });
         setProducts(list);
       } catch (err) {
         setError(err.message || 'Failed to load products');
@@ -40,7 +51,7 @@ const ProductsPage = () => {
       }
     };
     load();
-  }, []);
+  }, [category]);
 
   const filtered = useMemo(() => {
     let list = [...products];
@@ -107,6 +118,19 @@ const ProductsPage = () => {
       <h1>All Products</h1>
       <p className="subtitle">Browse and filter all farmer-listed produce.</p>
 
+      {/* Category tabs */}
+      <div className="category-tabs">
+        {CATEGORIES.map(c => (
+          <button
+            key={c.value}
+            className={`cat-tab${category === c.value ? ' active' : ''}`}
+            onClick={() => setCategory(c.value)}
+          >
+            {c.label}
+          </button>
+        ))}
+      </div>
+
       <div className="filters">
         <input
           type="text"
@@ -166,7 +190,7 @@ const ProductsPage = () => {
               </div>
               <div className="product-content">
                 <div className="product-header">
-                  <h3 className="product-title">{product.name}</h3>
+                  <h3 className="product-title">{product.name}{product.category === 'pooja' ? POOJA_BADGE : null}</h3>
                   <span className="product-category">{product.unit || 'kg'}</span>
                 </div>
                 <div className="product-pricing">

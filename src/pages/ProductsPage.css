@@ -145,3 +145,24 @@
   background-color: var(--error-lightest);
   margin: var(--spacing-md) 0;
 }
+
+/* ── Category tabs ── */
+.category-tabs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 20px;
+}
+.cat-tab {
+  padding: 7px 18px;
+  border-radius: 24px;
+  border: 1.5px solid #d1d5db;
+  background: #fff;
+  color: #374151;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+.cat-tab:hover { border-color: #2e7d32; color: #2e7d32; }
+.cat-tab.active { background: #2e7d32; color: #fff; border-color: #2e7d32; }

@@ -411,6 +411,9 @@ const FarmerDashboardContent = () => {
             <label>Category</label>
             <select name="category" value={form.category} onChange={handleChange}>
               <option value="general">General</option>
+              <option value="vegetable">🥦 Vegetable</option>
+              <option value="fruits">🍎 Fruits</option>
+              <option value="flowers">🌸 Flowers</option>
               <option value="pooja">🪔 Pooja Paath</option>
             </select>
           </div>

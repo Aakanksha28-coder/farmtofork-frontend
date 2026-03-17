@@ -27,10 +27,10 @@ export const createProduct = async (payload) => {
   return handleResponse(response);
 };
 
-export const getProducts = async ({ upcoming } = {}) => {
+export const getProducts = async ({ upcoming, category } = {}) => {
   const params = new URLSearchParams();
   if (upcoming !== undefined) params.set('upcoming', String(upcoming));
-  // Cache-busting to avoid 304 interfering with JSON parsing
+  if (category) params.set('category', category);
   params.set('_', String(Date.now()));
   const response = await fetch(`${API_URL}?${params.toString()}`);
   return handleResponse(response);
