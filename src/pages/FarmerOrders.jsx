@@ -44,7 +44,11 @@ const FarmerOrdersContent = () => {
     const status = pendingStatus[id];
     if (!status) return;
     try {
-      await updateOrderStatus(id, status, 'Updated by farmer');
+      const updated = await updateOrderStatus(id, status, 'Updated by farmer');
+      // Open WhatsApp to notify customer if URL is available
+      if (updated.whatsappCustomer) {
+        window.open(updated.whatsappCustomer, '_blank');
+      }
       await loadOrders();
     } catch (err) {
       alert(err.message || 'Failed to update status');
@@ -53,7 +57,10 @@ const FarmerOrdersContent = () => {
 
   const markReceived = async (id) => {
     try {
-      await updateOrderStatus(id, 'received', 'Farmer marked as received');
+      const updated = await updateOrderStatus(id, 'received', 'Farmer marked as received');
+      if (updated.whatsappCustomer) {
+        window.open(updated.whatsappCustomer, '_blank');
+      }
       await loadOrders();
     } catch (err) {
       alert(err.message || 'Failed to mark received');

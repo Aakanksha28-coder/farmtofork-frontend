@@ -11,7 +11,7 @@ const SignUp = () => {
     password: '',
     confirmPassword: '',
     role: 'customer',
-    // Fields for specific roles
+    whatsapp: '',
     farmName: '',
     farmAddress: '',
     farmLocation: { country: '', state: '', district: '', city: '', postcode: '' },
@@ -55,7 +55,8 @@ const SignUp = () => {
         name: formData.name,
         email: formData.email,
         password: formData.password,
-        role: formData.role
+        role: formData.role,
+        whatsapp: formData.whatsapp
       };
       
       // Add role-specific fields
@@ -227,6 +228,18 @@ const SignUp = () => {
               onChange={handleChange}
               placeholder="Enter your email"
               required
+            />
+          </div>
+
+          <div className="form-group">
+            <label htmlFor="whatsapp">WhatsApp Number <span style={{color:'#888',fontWeight:'normal'}}>(for order updates)</span></label>
+            <input
+              type="tel"
+              id="whatsapp"
+              name="whatsapp"
+              value={formData.whatsapp}
+              onChange={handleChange}
+              placeholder="e.g. 9876543210"
             />
           </div>
           

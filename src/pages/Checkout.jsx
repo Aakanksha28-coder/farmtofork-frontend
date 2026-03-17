@@ -91,6 +91,10 @@ const Checkout = () => {
 
       const order = await createOrder(orderData);
       clearCart();
+      // Open WhatsApp with order summary if available
+      if (order.whatsappCustomer) {
+        window.open(order.whatsappCustomer, '_blank');
+      }
       navigate(`/order/${order._id}`);
     } catch (err) {
       setError(err.message || 'Failed to create order');
