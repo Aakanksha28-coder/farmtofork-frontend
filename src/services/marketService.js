@@ -34,42 +34,32 @@ export const getIndianPrices = async ({ commodity, state, market, limit } = {}) 
   return handleResponse(response);
 };
 
-// Validate market price — calls data.gov.in Agmarknet directly (no backend needed)
+// Validate market price — calls backend which proxies data.gov.in Agmarknet (avoids CORS)
 export const getMarketPriceForValidation = async (productName, state) => {
-  const DATA_GOV_API_KEY = '579b464db66ec23bdd00000134def222aee64b8c4c651e16b6397a35';
-  const govBaseUrl = 'https://api.data.gov.in/resource/9ef84268-d588-465a-a308-a864a43d0070';
-
   // Title-case to match Agmarknet format: "tomato" → "Tomato"
   const commodity = productName.trim().charAt(0).toUpperCase() + productName.trim().slice(1).toLowerCase();
 
-  const govParams = new URLSearchParams({
-    'api-key': DATA_GOV_API_KEY,
-    format: 'json',
-    limit: '10'
-  });
-  govParams.set('filters[commodity]', commodity);
-  if (state && state.trim()) govParams.set('filters[state]', state.trim());
+  const params = new URLSearchParams({ commodity, limit: '10' });
+  if (state && state.trim()) params.set('state', state.trim());
 
-  const govRes = await fetch(`${govBaseUrl}?${govParams.toString()}`);
-  if (!govRes.ok) throw new Error('No market price found for this product');
+  const response = await fetch(`${API_URL}/india/prices?${params.toString()}`);
+  if (!response.ok) throw new Error('No market price found for this product');
 
-  const json = await govRes.json();
-  const records = Array.isArray(json.records) ? json.records : [];
-  const valid = records.filter(r => r && r.modal_price && !isNaN(Number(r.modal_price)));
+  const records = await response.json();
+  const valid = Array.isArray(records) ? records.filter(r => r && r.price && !isNaN(Number(r.price))) : [];
 
   if (valid.length === 0) throw new Error('No market price found for this product');
 
-  // Average modal prices — Agmarknet is Rs./Quintal, convert to Rs./kg
-  const avgModal = valid.reduce((sum, r) => sum + Number(r.modal_price), 0) / valid.length;
-  const pricePerKg = avgModal / 100;
+  // Average the prices (already converted to Rs./kg by backend)
+  const avgPrice = valid.reduce((sum, r) => sum + Number(r.price), 0) / valid.length;
 
   return {
-    price: pricePerKg,
+    price: avgPrice,
     unit: 'kg',
     source: 'agmarknet',
-    productName: valid[0].commodity,
+    productName: valid[0].productName || commodity,
     state: valid[0].state || state || '',
     market: valid[0].market || '',
-    recordedAt: valid[0].arrival_date || new Date().toISOString()
+    recordedAt: valid[0].recordedAt || new Date().toISOString()
   };
 };
