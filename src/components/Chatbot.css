@@ -1,0 +1,147 @@
+.farmbot-toggle {
+  position: fixed;
+  bottom: 24px;
+  right: 24px;
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  background: #2e7d32;
+  color: #fff;
+  border: none;
+  font-size: 26px;
+  cursor: pointer;
+  box-shadow: 0 4px 14px rgba(0,0,0,0.25);
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.2s;
+}
+.farmbot-toggle:hover { background: #1b5e20; }
+
+.farmbot-window {
+  position: fixed;
+  bottom: 90px;
+  right: 24px;
+  width: 340px;
+  max-height: 500px;
+  background: #fff;
+  border-radius: 16px;
+  box-shadow: 0 8px 32px rgba(0,0,0,0.18);
+  display: flex;
+  flex-direction: column;
+  z-index: 1000;
+  overflow: hidden;
+  animation: fb-slide-up 0.2s ease;
+}
+@keyframes fb-slide-up {
+  from { opacity: 0; transform: translateY(16px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+.farmbot-header {
+  background: #2e7d32;
+  color: #fff;
+  padding: 14px 16px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-weight: 600;
+  font-size: 15px;
+}
+.farmbot-header span { font-size: 20px; margin-right: 8px; }
+.farmbot-close {
+  background: none;
+  border: none;
+  color: #fff;
+  font-size: 20px;
+  cursor: pointer;
+  line-height: 1;
+}
+
+.farmbot-messages {
+  flex: 1;
+  overflow-y: auto;
+  padding: 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  background: #f9fbe7;
+}
+
+.fb-msg {
+  max-width: 82%;
+  padding: 9px 13px;
+  border-radius: 14px;
+  font-size: 13.5px;
+  line-height: 1.5;
+  word-break: break-word;
+}
+.fb-msg.user {
+  align-self: flex-end;
+  background: #2e7d32;
+  color: #fff;
+  border-bottom-right-radius: 4px;
+}
+.fb-msg.bot {
+  align-self: flex-start;
+  background: #fff;
+  color: #333;
+  border: 1px solid #e0e0e0;
+  border-bottom-left-radius: 4px;
+}
+
+.farmbot-quick {
+  display: flex;
+  gap: 6px;
+  padding: 8px 12px;
+  background: #fff;
+  border-top: 1px solid #eee;
+  flex-wrap: wrap;
+}
+.farmbot-quick button {
+  font-size: 12px;
+  padding: 5px 10px;
+  border-radius: 20px;
+  border: 1px solid #2e7d32;
+  background: #fff;
+  color: #2e7d32;
+  cursor: pointer;
+  transition: background 0.15s, color 0.15s;
+}
+.farmbot-quick button:hover { background: #2e7d32; color: #fff; }
+
+.farmbot-input {
+  display: flex;
+  padding: 10px 12px;
+  gap: 8px;
+  border-top: 1px solid #eee;
+  background: #fff;
+}
+.farmbot-input input {
+  flex: 1;
+  border: 1px solid #ccc;
+  border-radius: 20px;
+  padding: 8px 14px;
+  font-size: 13.5px;
+  outline: none;
+}
+.farmbot-input input:focus { border-color: #2e7d32; }
+.farmbot-input button {
+  background: #2e7d32;
+  color: #fff;
+  border: none;
+  border-radius: 50%;
+  width: 36px;
+  height: 36px;
+  font-size: 16px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.farmbot-input button:hover { background: #1b5e20; }
+
+@media (max-width: 400px) {
+  .farmbot-window { width: calc(100vw - 32px); right: 16px; }
+}

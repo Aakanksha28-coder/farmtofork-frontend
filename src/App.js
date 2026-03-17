@@ -22,6 +22,7 @@ import FeaturesPage from './pages/FeaturesPage';
 import MarketPrices from './pages/MarketPrices';
 import Contact from './pages/Contact';
 import AdminMessages from './pages/AdminMessages';
+import Chatbot from './components/Chatbot';
 
 function App() {
   const [isDrawerOpen, setIsDrawerOpen] = React.useState(false);
@@ -99,6 +100,7 @@ function App() {
               }
             />
           </Routes>
+          <Chatbot />
         </Router>
       </CartProvider>
     </AuthProvider>
