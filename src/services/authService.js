@@ -19,8 +19,7 @@ export const loginUser = async (email, password) => {
       name: data?.name || '',
       email: data?.email,
       role: data?.role || 'customer',
-      whatsapp: data?.whatsapp || '',
-      callmebotApiKey: data?.callmebotApiKey || ''
+      whatsapp: data?.whatsapp || ''
     };
 
     // Save token and user to localStorage
@@ -54,8 +53,7 @@ export const registerUser = async (userData) => {
       name: data?.name || '',
       email: data?.email,
       role: data?.role || 'customer',
-      whatsapp: data?.whatsapp || '',
-      callmebotApiKey: data?.callmebotApiKey || ''
+      whatsapp: data?.whatsapp || ''
     };
 
     // Save token and user to localStorage
