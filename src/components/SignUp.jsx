@@ -12,6 +12,7 @@ const SignUp = () => {
     confirmPassword: '',
     role: 'customer',
     whatsapp: '',
+    callmebotApiKey: '',
     farmName: '',
     farmAddress: '',
     farmLocation: { country: '', state: '', district: '', city: '', postcode: '' },
@@ -56,7 +57,8 @@ const SignUp = () => {
         email: formData.email,
         password: formData.password,
         role: formData.role,
-        whatsapp: formData.whatsapp
+        whatsapp: formData.whatsapp,
+        callmebotApiKey: formData.callmebotApiKey
       };
       
       // Add role-specific fields
@@ -231,18 +233,41 @@ const SignUp = () => {
             />
           </div>
 
+          <div className="whatsapp-setup-box">
+            <div className="whatsapp-setup-title">📲 Enable WhatsApp Order Updates</div>
+            <ol className="whatsapp-steps">
+              <li>Save <strong>+34 644 59 78 19</strong> in your contacts as <em>CallMeBot</em></li>
+              <li>Send this message to that number on WhatsApp:<br/>
+                <code>I allow callmebot to send me messages</code>
+              </li>
+              <li>You'll receive an API key — paste it below</li>
+            </ol>
+          </div>
+
           <div className="form-group">
-            <label htmlFor="whatsapp">WhatsApp Number <span style={{color:'#888',fontWeight:'normal'}}>(for order updates)</span></label>
+            <label htmlFor="whatsapp">WhatsApp Number</label>
             <input
               type="tel"
               id="whatsapp"
               name="whatsapp"
               value={formData.whatsapp}
               onChange={handleChange}
-              placeholder="e.g. 9876543210"
+              placeholder="e.g. 9876543210 (with country code)"
             />
           </div>
-          
+
+          <div className="form-group">
+            <label htmlFor="callmebotApiKey">CallMeBot API Key <span style={{color:'#888',fontWeight:'normal'}}>(from step above)</span></label>
+            <input
+              type="text"
+              id="callmebotApiKey"
+              name="callmebotApiKey"
+              value={formData.callmebotApiKey}
+              onChange={handleChange}
+              placeholder="e.g. 1234567"
+            />
+          </div>
+
           <div className="form-group">
             <label htmlFor="password">Password</label>
             <input

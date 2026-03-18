@@ -107,3 +107,36 @@
     padding: 20px;
   }
 }
+
+/* CallMeBot WhatsApp setup box */
+.whatsapp-setup-box {
+  background: #e8f5e9;
+  border: 1px solid #a5d6a7;
+  border-radius: 8px;
+  padding: 14px 16px;
+  margin-bottom: 16px;
+}
+
+.whatsapp-setup-title {
+  font-weight: 600;
+  color: #2e7d32;
+  margin-bottom: 8px;
+  font-size: 15px;
+}
+
+.whatsapp-steps {
+  margin: 0;
+  padding-left: 18px;
+  color: #333;
+  font-size: 13.5px;
+  line-height: 1.7;
+}
+
+.whatsapp-steps code {
+  background: #fff;
+  border: 1px solid #c8e6c9;
+  border-radius: 4px;
+  padding: 1px 6px;
+  font-size: 12.5px;
+  color: #1b5e20;
+}
