@@ -234,13 +234,11 @@ const SignUp = () => {
           </div>
 
           <div className="whatsapp-setup-box">
-            <div className="whatsapp-setup-title">📲 Enable WhatsApp Order Updates</div>
+            <div className="whatsapp-setup-title">📲 Enable WhatsApp Order Updates (Free)</div>
             <ol className="whatsapp-steps">
-              <li>Save <strong>+34 644 59 78 19</strong> in your contacts as <em>CallMeBot</em></li>
-              <li>Send this message to that number on WhatsApp:<br/>
-                <code>I allow callmebot to send me messages</code>
-              </li>
-              <li>You'll receive an API key — paste it below</li>
+              <li>Visit <a href="https://www.callmebot.com/blog/free-api-whatsapp-messages/" target="_blank" rel="noreferrer"><strong>callmebot.com</strong></a> and follow Step 1–3 to get your API key</li>
+              <li>Send the activation message to the CallMeBot number shown on that page</li>
+              <li>You'll receive an API key — paste it below along with your WhatsApp number</li>
             </ol>
           </div>
 
