@@ -166,3 +166,64 @@
 }
 .cat-tab:hover { border-color: #2e7d32; color: #2e7d32; }
 .cat-tab.active { background: #2e7d32; color: #fff; border-color: #2e7d32; }
+
+/* ── Nearby products ── */
+.nearby-section {
+  margin-bottom: 2rem;
+  background: linear-gradient(135deg, #f1f8e9, #e8f5e9);
+  border-radius: 12px;
+  padding: 1.2rem 1.4rem;
+  border: 1px solid #c8e6c9;
+}
+
+.nearby-title {
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: #2e7d32;
+  margin: 0 0 1rem 0;
+}
+
+.nearby-grid {
+  display: flex;
+  gap: 12px;
+  overflow-x: auto;
+  padding-bottom: 4px;
+}
+
+.nearby-card {
+  flex: 0 0 130px;
+  border-radius: 10px;
+  overflow: hidden;
+  background: #fff;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+  cursor: pointer;
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+.nearby-card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 6px 16px rgba(0,0,0,0.12);
+}
+.nearby-card img {
+  width: 100%;
+  height: 90px;
+  object-fit: cover;
+}
+.nearby-info {
+  padding: 6px 8px;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+.nearby-name {
+  font-size: 12px;
+  font-weight: 600;
+  color: #333;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.nearby-price {
+  font-size: 11px;
+  color: #4CAF50;
+  font-weight: 700;
+}

@@ -3,10 +3,12 @@ import { useNavigate } from 'react-router-dom';
 import { useCart } from '../contexts/CartContext';
 import { createOrder } from '../services/orderService';
 import { getCurrentPosition, reverseGeocode } from '../services/locationService';
+import { useAuth } from '../contexts/AuthContext';
 import './Checkout.css';
 
 const Checkout = () => {
   const { items, totals, clearCart } = useCart();
+  const { currentUser } = useAuth();
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
   const [detectingLocation, setDetectingLocation] = useState(false);
@@ -16,7 +18,7 @@ const Checkout = () => {
     city: '',
     state: '',
     postalCode: '',
-    phone: '',
+    phone: currentUser?.whatsapp || '',
     paymentMethod: 'cod'
   });
 

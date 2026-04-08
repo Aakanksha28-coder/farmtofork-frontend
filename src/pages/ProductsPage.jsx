@@ -36,6 +36,33 @@ const ProductsPage = () => {
   const [openNegotiationFor, setOpenNegotiationFor] = useState(null);
   const [toastOpen, setToastOpen] = useState(false);
   const [toastMsg, setToastMsg] = useState('');
+  const [userLocation, setUserLocation] = useState(null);
+  const [nearbyProducts, setNearbyProducts] = useState([]);
+
+  // Detect user location once on mount
+  useEffect(() => {
+    if (isFarmer) return; // farmers don't need nearby suggestions
+    (async () => {
+      if (!navigator.geolocation) return;
+      navigator.geolocation.getCurrentPosition(
+        async (pos) => {
+          try {
+            const { latitude: lat, longitude: lon } = pos.coords;
+            const res = await fetch(
+              `https://nominatim.openstreetmap.org/reverse?lat=${lat}&lon=${lon}&format=json`
+            );
+            const data = await res.json();
+            const addr = data.address || {};
+            const city  = (addr.city || addr.town || addr.village || addr.county || '').toLowerCase();
+            const state = (addr.state || '').toLowerCase();
+            setUserLocation({ city, state });
+          } catch { /* silent */ }
+        },
+        () => { /* permission denied — silent */ },
+        { timeout: 6000 }
+      );
+    })();
+  }, [isFarmer]);
 
   useEffect(() => {
     const load = async () => {
@@ -52,6 +79,20 @@ const ProductsPage = () => {
     };
     load();
   }, [category]);
+
+  // Compute nearby products when location is known
+  useEffect(() => {
+    if (!userLocation || !products.length) return;
+    const { city, state } = userLocation;
+    const nearby = products.filter(p => {
+      const loc = p.farmer?.roleSpecificData?.farmLocation || {};
+      const farmerCity  = (loc.city  || '').toLowerCase();
+      const farmerState = (loc.state || '').toLowerCase();
+      return (city  && farmerCity  && farmerCity.includes(city))  ||
+             (state && farmerState && farmerState.includes(state));
+    });
+    setNearbyProducts(nearby.slice(0, 6));
+  }, [userLocation, products]);
 
   const filtered = useMemo(() => {
     let list = [...products];
@@ -117,6 +158,27 @@ const ProductsPage = () => {
     <div className="products-page container">
       <h1>All Products</h1>
       <p className="subtitle">Browse and filter all farmer-listed produce.</p>
+
+      {/* Nearby products section */}
+      {!isFarmer && nearbyProducts.length > 0 && (
+        <div className="nearby-section">
+          <h2 className="nearby-title">📍 Near You — {userLocation?.city || userLocation?.state}</h2>
+          <div className="nearby-grid">
+            {nearbyProducts.map(product => (
+              <div key={product._id} className="nearby-card" onClick={() => handleAddToCart(product)}>
+                <img
+                  src={product.imageUrl ? `${apiBase}${product.imageUrl}` : 'https://images.unsplash.com/photo-1524592157393-88fb3ef00d81?w=400&q=80'}
+                  alt={product.name}
+                />
+                <div className="nearby-info">
+                  <span className="nearby-name">{product.name}</span>
+                  <span className="nearby-price">₹{product.price}/{product.unit}</span>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
 
       {/* Category tabs */}
       <div className="category-tabs">
