@@ -32,6 +32,7 @@ const FarmerDashboardContent = () => {
   const [acceptPrice, setAcceptPrice] = useState({});
 
   const apiBase = API_ORIGIN;
+  const imgSrc = (url) => !url ? null : url.startsWith('http') ? url : `${apiBase}${url}`;
 
   const loadMyProducts = async () => {
     try {
@@ -235,7 +236,7 @@ const FarmerDashboardContent = () => {
         <li key={p._id} className="product-item">
           <div className="product-row">
             <div className="thumb">
-              {p.imageUrl ? <img src={`${apiBase}${p.imageUrl}`} alt={p.name} /> : <div className="placeholder" />}
+              {p.imageUrl ? <img src={imgSrc(p.imageUrl)} alt={p.name} /> : <div className="placeholder" />}
             </div>
             <div>
               <strong>{p.name}</strong> - ₹{p.price} / {p.unit} | Qty: {p.quantity}

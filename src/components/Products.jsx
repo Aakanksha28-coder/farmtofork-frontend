@@ -60,6 +60,7 @@ const Products = () => {
   };
 
   const origin = API_ORIGIN;
+  const imgSrc = (url, fallback) => !url ? fallback : url.startsWith('http') ? url : `${origin}${url}`;
 
   return (
     <div className="products-section">
@@ -84,7 +85,7 @@ const Products = () => {
                 <div key={product._id} className="product-card">
                   <div className="product-image">
                     <img 
-                      src={product.imageUrl ? `${origin}${product.imageUrl}` : 'https://images.unsplash.com/photo-1524592157393-88fb3ef00d81?w=800&q=80&auto=format&fit=crop'} 
+                      src={imgSrc(product.imageUrl, 'https://images.unsplash.com/photo-1524592157393-88fb3ef00d81?w=800&q=80&auto=format&fit=crop')} 
                       alt={product.name} 
                     />
                   </div>
@@ -120,7 +121,7 @@ const Products = () => {
                 <div key={product._id} className="product-card">
                   <div className="product-image">
                     <img 
-                      src={product.imageUrl ? `${origin}${product.imageUrl}` : 'https://images.unsplash.com/photo-1567306226416-28f0efdc88ce?w=800&q=80&auto=format&fit=crop'} 
+                      src={imgSrc(product.imageUrl, 'https://images.unsplash.com/photo-1567306226416-28f0efdc88ce?w=800&q=80&auto=format&fit=crop')} 
                       alt={product.name} 
                     />
                   </div>

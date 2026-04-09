@@ -135,8 +135,7 @@ const ProductsPage = () => {
   }, [products, search, unit, upcomingOnly, minPrice, maxPrice, sortBy]);
 
   const apiBase = API_ORIGIN;
-
-  const handleNegotiate = (product) => {
+  const imgSrc = (url) => !url ? null : url.startsWith('http') ? url : `${apiBase}${url}`; = (product) => {
     if (!isAuthenticated || currentUser?.role !== 'customer') {
       navigate('/signin');
       return;
@@ -167,7 +166,7 @@ const ProductsPage = () => {
             {nearbyProducts.map(product => (
               <div key={product._id} className="nearby-card" onClick={() => handleAddToCart(product)}>
                 <img
-                  src={product.imageUrl ? `${apiBase}${product.imageUrl}` : 'https://images.unsplash.com/photo-1524592157393-88fb3ef00d81?w=400&q=80'}
+                  src={imgSrc(product.imageUrl) || 'https://images.unsplash.com/photo-1524592157393-88fb3ef00d81?w=400&q=80'}
                   alt={product.name}
                 />
                 <div className="nearby-info">
@@ -246,7 +245,7 @@ const ProductsPage = () => {
             <div key={product._id} className="product-card">
               <div className="product-image">
                 <img
-                  src={product.imageUrl ? `${apiBase}${product.imageUrl}` : 'https://images.unsplash.com/photo-1524592157393-88fb3ef00d81?w=800&q=80&auto=format&fit=crop'}
+                  src={imgSrc(product.imageUrl) || 'https://images.unsplash.com/photo-1524592157393-88fb3ef00d81?w=800&q=80&auto=format&fit=crop'}
                   alt={product.name}
                 />
               </div>
