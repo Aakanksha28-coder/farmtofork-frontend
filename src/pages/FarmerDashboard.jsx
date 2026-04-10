@@ -32,7 +32,7 @@ const FarmerDashboardContent = () => {
   const [acceptPrice, setAcceptPrice] = useState({});
 
   const apiBase = API_ORIGIN;
-  const imgSrc = (url) => !url ? null : url.startsWith('http') ? url : `${apiBase}${url}`;
+  const imgSrc = (url) => !url ? null : (url.startsWith('http') || url.startsWith('data:')) ? url : `${apiBase}${url}`;
 
   const loadMyProducts = async () => {
     try {

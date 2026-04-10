@@ -135,7 +135,9 @@ const ProductsPage = () => {
   }, [products, search, unit, upcomingOnly, minPrice, maxPrice, sortBy]);
 
   const apiBase = API_ORIGIN;
-  const imgSrc = (url) => !url ? null : url.startsWith('http') ? url : `${apiBase}${url}`; = (product) => {
+  const imgSrc = (url) => !url ? null : (url.startsWith('http') || url.startsWith('data:')) ? url : `${apiBase}${url}`;
+
+  const handleNegotiate = (product) => {
     if (!isAuthenticated || currentUser?.role !== 'customer') {
       navigate('/signin');
       return;

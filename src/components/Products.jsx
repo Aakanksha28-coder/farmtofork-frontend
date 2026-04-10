@@ -60,7 +60,7 @@ const Products = () => {
   };
 
   const origin = API_ORIGIN;
-  const imgSrc = (url, fallback) => !url ? fallback : url.startsWith('http') ? url : `${origin}${url}`;
+  const imgSrc = (url, fallback) => !url ? fallback : (url.startsWith('http') || url.startsWith('data:')) ? url : `${origin}${url}`;
 
   return (
     <div className="products-section">

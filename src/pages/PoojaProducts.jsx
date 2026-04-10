@@ -84,7 +84,7 @@ const PoojaProducts = () => {
           {products.map(p => (
             <div key={p._id} className="pooja-card">
               {p.imageUrl ? (
-                <img src={p.imageUrl.startsWith('http') ? p.imageUrl : `${API_ORIGIN}${p.imageUrl}`} alt={p.name} className="pooja-card-img" />
+                <img src={p.imageUrl.startsWith('http') || p.imageUrl.startsWith('data:') ? p.imageUrl : `${API_ORIGIN}${p.imageUrl}`} alt={p.name} className="pooja-card-img" />
               ) : (
                 <div className="pooja-card-img-placeholder">🌸</div>
               )}
