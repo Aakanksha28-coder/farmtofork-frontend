@@ -382,3 +382,16 @@
   background: #e3f2fd;
   color: #1565c0;
 }
+
+/* ── Nearby pin button ── */
+.nearby-btn {
+  background: none;
+  border: none;
+  font-size: 1.3rem;
+  cursor: pointer;
+  padding: 6px;
+  border-radius: 50%;
+  transition: background 0.2s;
+  line-height: 1;
+}
+.nearby-btn:hover { background: rgba(76,175,80,0.1); }

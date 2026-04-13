@@ -57,6 +57,10 @@ const Navbar = () => {
                 {cartCount > 0 && <span className="cart-badge">{cartCount}</span>}
               </button>
             )}
+            {/* Nearby Farmers pin */}
+            <button className="nearby-btn" onClick={() => navigate('/nearby-farmers')} aria-label="Nearby Farmers" title="Nearby Farmers">
+              📍
+            </button>
             <NotificationBell />
             <button
               onClick={() => setIsDrawerOpen(!isDrawerOpen)}
