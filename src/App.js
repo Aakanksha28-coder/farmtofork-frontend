@@ -22,6 +22,7 @@ import FeaturesPage from './pages/FeaturesPage';
 import MarketPrices from './pages/MarketPrices';
 import Contact from './pages/Contact';
 import AdminMessages from './pages/AdminMessages';
+import NearbyFarmers from './pages/NearbyFarmers';
 import Chatbot from './components/Chatbot';
 import PoojaProducts from './pages/PoojaProducts';
 
@@ -72,6 +73,7 @@ function App() {
             <Route path="/market-prices" element={<MarketPrices />} />
             <Route path="/contact" element={<Contact />} />
             <Route path="/impact" element={<Impact />} />
+            <Route path="/nearby-farmers" element={<NearbyFarmers />} />
             <Route path="/pooja-products" element={<PoojaProducts />} />
             <Route path="/add-story" element={<ProtectedRoute><StoryForm /></ProtectedRoute>} />
 

@@ -71,6 +71,7 @@ const Drawer = ({ isOpen, onClose }) => {
             <Link to="/about" onClick={onClose}>About</Link>
             <Link to="/features" onClick={onClose}>Features</Link>
             <Link to="/products" onClick={onClose}>Products</Link>
+            <Link to="/nearby-farmers" onClick={onClose}>📍 Nearby Farmers</Link>
             <Link to="/market-prices" onClick={onClose}>Market Prices</Link>
             <Link to="/pooja-products" onClick={onClose}>🪔 Pooja Essentials</Link>
             {currentUser?.role !== 'farmer' && (

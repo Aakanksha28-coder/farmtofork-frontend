@@ -20,6 +20,9 @@ const SignUp = () => {
     businessType: '',
     deliveryArea: ''
   });
+
+  const [coords, setCoords] = useState(null);       // { lat, lng }
+  const [locStatus, setLocStatus] = useState('');   // feedback message
   
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
@@ -56,7 +59,9 @@ const SignUp = () => {
         email: formData.email,
         password: formData.password,
         role: formData.role,
-        whatsapp: formData.whatsapp
+        whatsapp: formData.whatsapp,
+        // Include GPS coordinates if captured (farmers)
+        ...(coords ? { lat: coords.lat, lng: coords.lng } : {})
       };
       
       // Add role-specific fields
@@ -129,6 +134,30 @@ const SignUp = () => {
                 onChange={handleChange}
                 placeholder="House/Street/Village"
               />
+            </div>
+
+            {/* GPS capture for nearby farmer feature */}
+            <div className="form-group">
+              <label>Farm GPS Location</label>
+              <button
+                type="button"
+                className="signup-button"
+                style={{ background: coords ? '#388e3c' : '#1976d2', marginBottom: '6px' }}
+                onClick={() => {
+                  setLocStatus('Detecting...');
+                  navigator.geolocation.getCurrentPosition(
+                    (pos) => {
+                      setCoords({ lat: pos.coords.latitude, lng: pos.coords.longitude });
+                      setLocStatus(`✅ Captured: ${pos.coords.latitude.toFixed(4)}, ${pos.coords.longitude.toFixed(4)}`);
+                    },
+                    () => setLocStatus('❌ Permission denied — location not saved'),
+                    { timeout: 8000 }
+                  );
+                }}
+              >
+                📍 {coords ? 'Re-capture Location' : 'Capture My Farm Location'}
+              </button>
+              {locStatus && <small style={{ color: coords ? '#2e7d32' : '#c62828' }}>{locStatus}</small>}
             </div>
 
             <LocationSelector
