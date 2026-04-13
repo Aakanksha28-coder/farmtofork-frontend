@@ -6,6 +6,7 @@ import { FaBars, FaShoppingCart } from 'react-icons/fa';
 import Drawer from './Drawer';
 import { useAuth } from '../contexts/AuthContext';
 import { useCart } from '../contexts/CartContext';
+import NotificationBell from './NotificationBell';
 
 const Navbar = () => {
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
@@ -56,6 +57,7 @@ const Navbar = () => {
                 {cartCount > 0 && <span className="cart-badge">{cartCount}</span>}
               </button>
             )}
+            <NotificationBell />
             <button
               onClick={() => setIsDrawerOpen(!isDrawerOpen)}
               className="drawer-toggle"
