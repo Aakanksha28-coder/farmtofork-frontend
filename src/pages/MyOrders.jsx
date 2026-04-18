@@ -51,7 +51,7 @@ const MyOrders = () => {
                 <strong>Status:</strong> {order.status}
               </div>
               <div>
-                <strong>Total:</strong> ${order.totalPrice?.toFixed(2) ?? order.total?.toFixed(2)}
+                <strong>Total:</strong> ₹{order.totalPrice?.toFixed(2) ?? order.total?.toFixed(2)}
               </div>
             </div>
             <div className="order-actions">

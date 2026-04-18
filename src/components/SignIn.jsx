@@ -71,7 +71,6 @@ const SignIn = () => {
         </form>
         <div className="signin-footer">
           <p>Don't have an account? <a href="/signup">Sign Up</a></p>
-          <p><a href="/forgot-password">Forgot Password?</a></p>
         </div>
       </div>
     </div>

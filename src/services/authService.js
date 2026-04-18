@@ -19,7 +19,8 @@ export const loginUser = async (email, password) => {
       name: data?.name || '',
       email: data?.email,
       role: data?.role || 'customer',
-      whatsapp: data?.whatsapp || ''
+      whatsapp: data?.whatsapp || '',
+      roleSpecificData: data?.roleSpecificData || {}
     };
 
     // Save token and user to localStorage
@@ -53,7 +54,8 @@ export const registerUser = async (userData) => {
       name: data?.name || '',
       email: data?.email,
       role: data?.role || 'customer',
-      whatsapp: data?.whatsapp || ''
+      whatsapp: data?.whatsapp || '',
+      roleSpecificData: data?.roleSpecificData || {}
     };
 
     // Save token and user to localStorage

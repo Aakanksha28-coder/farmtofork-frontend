@@ -1,7 +1,8 @@
-import React, { useState, useRef, useEffect } from 'react';
+import { useState, useRef, useEffect } from 'react';
+import { API_BASE_URL } from '../config/api';
 import './Chatbot.css';
 
-const BOT_API = 'https://farmtofork-backend-2.onrender.com/api/chatbot';
+const BOT_API = `${API_BASE_URL}/chatbot`;
 
 const QUICK_ACTIONS = [
   { label: '💰 Check Prices',  text: 'market price' },
