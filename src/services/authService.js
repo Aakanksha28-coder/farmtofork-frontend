@@ -19,8 +19,8 @@ export const loginUser = async (email, password) => {
       name: data?.name || '',
       email: data?.email,
       role: data?.role || 'customer',
-      whatsapp: data?.whatsapp || '',
-      roleSpecificData: data?.roleSpecificData || {}
+      roleSpecificData: data?.roleSpecificData || {},
+      isEmailVerified: data?.isEmailVerified ?? true
     };
 
     // Save token and user to localStorage
@@ -54,8 +54,8 @@ export const registerUser = async (userData) => {
       name: data?.name || '',
       email: data?.email,
       role: data?.role || 'customer',
-      whatsapp: data?.whatsapp || '',
-      roleSpecificData: data?.roleSpecificData || {}
+      roleSpecificData: data?.roleSpecificData || {},
+      isEmailVerified: data?.isEmailVerified ?? false
     };
 
     // Save token and user to localStorage
@@ -101,4 +101,14 @@ export const getCurrentUser = async () => {
     console.error('Error fetching user profile:', error);
     return null;
   }
+};
+
+// Resend verification email
+export const resendVerificationEmail = async (email) => {
+  const response = await fetch(`${BASE_URL}/auth/resend-verification`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ email })
+  });
+  return handleResponse(response);
 };
