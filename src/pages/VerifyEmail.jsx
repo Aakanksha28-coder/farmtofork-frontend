@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { useSearchParams, useNavigate } from 'react-router-dom';
 import { API_BASE_URL } from '../config/api';
-import { resendVerificationEmail } from '../services/authService';
+import { resendOtp } from '../services/authService';
 
 const VerifyEmail = () => {
   const [searchParams] = useSearchParams();
@@ -33,7 +33,7 @@ const VerifyEmail = () => {
   const handleResend = async (e) => {
     e.preventDefault();
     try {
-      const data = await resendVerificationEmail(resendEmail);
+      const data = await resendOtp(resendEmail);
       setResendMsg(data.message || 'Verification email sent!');
     } catch (err) {
       setResendMsg(err.message || 'Failed to resend.');
