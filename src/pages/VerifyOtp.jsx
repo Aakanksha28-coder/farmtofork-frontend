@@ -16,15 +16,7 @@ const VerifyOtp = () => {
   const [error, setError]       = useState('');
   const [loading, setLoading]   = useState(false);
   const [resendMsg, setResendMsg] = useState('');
-  const [countdown, setCountdown] = useState(60);
   const inputRefs = useRef([]);
-
-  // Countdown timer for resend
-  useEffect(() => {
-    if (countdown <= 0) return;
-    const t = setTimeout(() => setCountdown(c => c - 1), 1000);
-    return () => clearTimeout(t);
-  }, [countdown]);
 
   const handleDigit = (i, val) => {
     if (!/^\d?$/.test(val)) return;
@@ -73,7 +65,6 @@ const VerifyOtp = () => {
       setResendMsg('');
       await resendOtp(email);
       setResendMsg('New OTP sent! Check your inbox.');
-      setCountdown(60);
     } catch (err) {
       setResendMsg(err.message || 'Failed to resend OTP.');
     }
@@ -125,13 +116,9 @@ const VerifyOtp = () => {
         </form>
 
         <div className="otp-resend">
-          {countdown > 0 ? (
-            <span>Resend OTP in {countdown}s</span>
-          ) : (
-            <button className="otp-resend-btn" onClick={handleResend}>
-              Resend OTP
-            </button>
-          )}
+          <button className="otp-resend-btn" onClick={handleResend}>
+            Didn't receive it? Resend OTP
+          </button>
           {resendMsg && <p className="otp-resend-msg">{resendMsg}</p>}
         </div>
       </div>
