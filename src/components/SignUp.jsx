@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
-import { useAuth } from '../contexts/AuthContext';
 import { useNavigate } from 'react-router-dom';
+import { registerUser } from '../services/authService';
 import LocationSelector from './LocationSelector';
 import './SignUp.css';
 
@@ -24,8 +24,7 @@ const SignUp = () => {
   const [loading, setLoading]   = useState(false);
   const [success, setSuccess]   = useState('');
   const [alreadyExists, setAlreadyExists] = useState(false);
-  const { register }            = useAuth();
-  const navigate                = useNavigate();
+  const navigate = useNavigate();
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -74,7 +73,7 @@ const SignUp = () => {
         userData.roleSpecificData = { deliveryArea: formData.deliveryArea };
       }
 
-      await register(userData);
+      const result = await registerUser(userData);
       // Redirect to OTP verification page with email
       navigate('/verify-otp', { state: { email: formData.email } });
     } catch (err) {
