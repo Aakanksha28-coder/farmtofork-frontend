@@ -1,4 +1,4 @@
-import { useState, useRef, useEffect } from 'react';
+import { useState, useRef } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { verifyOtp, resendOtp } from '../services/authService';
 import { useAuth } from '../contexts/AuthContext';
@@ -9,12 +9,11 @@ const VerifyOtp = () => {
   const navigate = useNavigate();
   const { setCurrentUser } = useAuth();
 
-  // Email passed via navigation state from SignUp
-  const email = location.state?.email || '';
+  const phone = location.state?.phone || '';
 
-  const [digits, setDigits]     = useState(['', '', '', '', '', '']);
-  const [error, setError]       = useState('');
-  const [loading, setLoading]   = useState(false);
+  const [digits, setDigits]       = useState(['', '', '', '', '', '']);
+  const [error, setError]         = useState('');
+  const [loading, setLoading]     = useState(false);
   const [resendMsg, setResendMsg] = useState('');
   const inputRefs = useRef([]);
 
@@ -27,9 +26,8 @@ const VerifyOtp = () => {
   };
 
   const handleKeyDown = (i, e) => {
-    if (e.key === 'Backspace' && !digits[i] && i > 0) {
+    if (e.key === 'Backspace' && !digits[i] && i > 0)
       inputRefs.current[i - 1]?.focus();
-    }
   };
 
   const handlePaste = (e) => {
@@ -48,7 +46,7 @@ const VerifyOtp = () => {
     setError('');
     setLoading(true);
     try {
-      const data = await verifyOtp(email, otp);
+      const data = await verifyOtp(phone, otp);
       if (data.user) setCurrentUser(data.user);
       navigate('/', { replace: true });
     } catch (err) {
@@ -63,31 +61,34 @@ const VerifyOtp = () => {
   const handleResend = async () => {
     try {
       setResendMsg('');
-      await resendOtp(email);
-      setResendMsg('New OTP sent! Check your inbox.');
+      await resendOtp(phone);
+      setResendMsg('New OTP sent to your mobile!');
     } catch (err) {
       setResendMsg(err.message || 'Failed to resend OTP.');
     }
   };
 
-  if (!email) {
+  if (!phone) {
     return (
       <div className="otp-page">
         <div className="otp-card">
-          <p>No email found. Please <a href="/signup">sign up</a> again.</p>
+          <p>No phone number found. Please <a href="/signup">sign up</a> again.</p>
         </div>
       </div>
     );
   }
 
+  const masked = phone.replace(/\D/g, '').slice(-10);
+  const display = masked.slice(0, 2) + 'XXXXXX' + masked.slice(-2);
+
   return (
     <div className="otp-page">
       <div className="otp-card">
-        <div className="otp-icon">📧</div>
-        <h2>Verify Your Email</h2>
+        <div className="otp-icon">📱</div>
+        <h2>Verify Your Mobile</h2>
         <p className="otp-sub">
-          We sent a 6-digit code to<br/>
-          <strong>{email}</strong>
+          We sent a 6-digit OTP to<br/>
+          <strong>+91 {display}</strong>
         </p>
 
         {error && <div className="otp-error">{error}</div>}

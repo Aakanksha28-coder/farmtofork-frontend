@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import { useAuth } from '../contexts/AuthContext';
 import { useNavigate } from 'react-router-dom';
-import { resendOtp } from '../services/authService';
 import './SignIn.css';
 
 const SignIn = () => {
@@ -10,7 +9,7 @@ const SignIn = () => {
   const [error, setError]       = useState('');
   const [loading, setLoading]   = useState(false);
   const [needsVerify, setNeedsVerify] = useState(false);
-  const [resendMsg, setResendMsg]     = useState('');
+  const [verifyPhone, setVerifyPhone] = useState('');
   const { login }   = useAuth();
   const navigate    = useNavigate();
 
@@ -22,27 +21,18 @@ const SignIn = () => {
       setNeedsVerify(false);
       setLoading(true);
       const result = await login(email, password);
-      // If backend says needs verification, go to OTP page
       if (result?.needsVerification) {
-        navigate('/verify-otp', { state: { email } });
+        navigate('/verify-otp', { state: { phone: result.phone } });
         return;
       }
       navigate('/');
     } catch (err) {
-      if (err.message?.includes('verify') || err.message?.includes('verification')) {
+      if (err.message?.toLowerCase().includes('verify')) {
         setNeedsVerify(true);
       }
       setError(err.message || 'Failed to sign in. Please check your credentials.');
     } finally {
       setLoading(false);
-    }
-  };
-
-  const handleResend = async () => {
-    try {
-      navigate('/verify-otp', { state: { email } });
-    } catch (err) {
-      setResendMsg(err.message || 'Failed to resend.');
     }
   };
 
@@ -54,13 +44,11 @@ const SignIn = () => {
           <div className="error-message">
             {error}
             {needsVerify && (
-              <div style={{ marginTop: '8px' }}>
-                <button
-                  onClick={handleResend}
-                  style={{ background: 'none', border: 'none', color: '#1565c0', cursor: 'pointer', textDecoration: 'underline', fontSize: '0.9rem' }}>
-                  Resend verification email
+              <div style={{ marginTop: '8px', fontSize: '0.9rem' }}>
+                <button onClick={() => navigate('/verify-otp')}
+                  style={{ background: 'none', border: 'none', color: '#2e7d32', cursor: 'pointer', fontWeight: 600, textDecoration: 'underline', fontSize: '0.9rem', padding: 0 }}>
+                  Verify your mobile number
                 </button>
-                {resendMsg && <span style={{ marginLeft: '8px', color: '#2e7d32', fontSize: '0.85rem' }}>{resendMsg}</span>}
               </div>
             )}
           </div>

@@ -2,12 +2,13 @@ import { API_BASE_URL as BASE_URL } from '../config/api';
 import { handleResponse, getAuthHeader } from '../utils/apiHelper';
 
 const mapUser = (data) => ({
-  _id:             data?._id,
-  name:            data?.name || '',
-  email:           data?.email,
-  role:            data?.role || 'customer',
+  _id:              data?._id,
+  name:             data?.name || '',
+  email:            data?.email,
+  phone:            data?.phone || '',
+  role:             data?.role || 'customer',
   roleSpecificData: data?.roleSpecificData || {},
-  isEmailVerified: data?.isEmailVerified ?? false
+  isPhoneVerified:  data?.isPhoneVerified ?? false
 });
 
 // Login
@@ -24,10 +25,11 @@ export const loginUser = async (email, password) => {
     localStorage.setItem('token', token);
     localStorage.setItem('user', JSON.stringify(user));
   }
-  return { user, token, ...data };
+  // Pass through needsVerification flag for SignIn to handle
+  return { user, token, needsVerification: data?.needsVerification, phone: data?.phone, ...data };
 };
 
-// Register — returns requiresOtp flag
+// Register
 export const registerUser = async (userData) => {
   const response = await fetch(`${BASE_URL}/auth/register`, {
     method: 'POST',
@@ -44,12 +46,12 @@ export const registerUser = async (userData) => {
   return { user, token, requiresOtp: data?.requiresOtp, message: data?.message };
 };
 
-// Verify OTP — on success, update stored user as verified
-export const verifyOtp = async (email, otp) => {
+// Verify OTP (phone-based)
+export const verifyOtp = async (phone, otp) => {
   const response = await fetch(`${BASE_URL}/auth/verify-otp`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ email, otp })
+    body: JSON.stringify({ phone, otp })
   });
   const data  = await handleResponse(response);
   const token = data?.token;
@@ -61,12 +63,12 @@ export const verifyOtp = async (email, otp) => {
   return { user, token, message: data?.message };
 };
 
-// Resend OTP
-export const resendOtp = async (email) => {
+// Resend OTP (phone-based)
+export const resendOtp = async (phone) => {
   const response = await fetch(`${BASE_URL}/auth/resend-otp`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ email })
+    body: JSON.stringify({ phone })
   });
   return handleResponse(response);
 };

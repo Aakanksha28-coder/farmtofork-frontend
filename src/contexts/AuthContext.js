@@ -34,10 +34,11 @@ export const AuthProvider = ({ children }) => {
     setError('');
     try {
       setLoading(true);
-      const { user, token } = await loginUser(email, password);
-      localStorage.setItem('token', token);
+      const result = await loginUser(email, password);
+      const { user, token } = result;
+      if (token) localStorage.setItem('token', token);
       setCurrentUser(user);
-      return user;
+      return result; // return full result so SignIn can check needsVerification
     } catch (err) {
       setError(err.message || 'Failed to login');
       throw err;
