@@ -22,13 +22,15 @@ const SignUp = () => {
   const [locStatus, setLocStatus] = useState('');
   const [error, setError]       = useState('');
   const [loading, setLoading]   = useState(false);
-  const [success, setSuccess]   = useState(''); // shown after signup
+  const [success, setSuccess]   = useState('');
+  const [alreadyExists, setAlreadyExists] = useState(false);
   const { register }            = useAuth();
   const navigate                = useNavigate();
 
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData(prev => ({ ...prev, [name]: value }));
+    if (name === 'email') setAlreadyExists(false);
   };
 
   const handleSubmit = async (e) => {
@@ -76,7 +78,12 @@ const SignUp = () => {
       // Redirect to OTP verification page with email
       navigate('/verify-otp', { state: { email: formData.email } });
     } catch (err) {
-      setError(err.message || 'Failed to create an account. Please try again.');
+      const msg = err.message || 'Failed to create an account. Please try again.';
+      setError(msg);
+      // If email already exists, offer to sign in
+      if (msg.toLowerCase().includes('already exists')) {
+        setAlreadyExists(true);
+      }
     } finally {
       setLoading(false);
     }
@@ -153,7 +160,24 @@ const SignUp = () => {
     <div className="signup-container">
       <div className="signup-card">
         <h2>Create an Account</h2>
-        {error && <div className="error-message">{error}</div>}
+        {error && (
+          <div className="error-message">
+            {error}
+            {alreadyExists && (
+              <div style={{ marginTop: '8px', fontSize: '0.9rem' }}>
+                Already have an account?{' '}
+                <a href="/signin" style={{ color: '#1565c0', fontWeight: 600 }}>Sign in here</a>
+                {' '}or{' '}
+                <button
+                  type="button"
+                  onClick={() => navigate('/verify-otp', { state: { email: formData.email } })}
+                  style={{ background: 'none', border: 'none', color: '#2e7d32', cursor: 'pointer', fontWeight: 600, textDecoration: 'underline', fontSize: '0.9rem', padding: 0 }}>
+                  Verify your email
+                </button>
+              </div>
+            )}
+          </div>
+        )}
         <form onSubmit={handleSubmit}>
           <div className="form-group">
             <label htmlFor="role">I am a:</label>
