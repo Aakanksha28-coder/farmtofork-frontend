@@ -73,9 +73,8 @@ const SignUp = () => {
       }
 
       await register(userData);
-      // Show success banner then redirect to homepage
-      setSuccess('Account created! Please check your email to verify your account.');
-      setTimeout(() => navigate('/'), 3000);
+      // Redirect to OTP verification page with email
+      navigate('/verify-otp', { state: { email: formData.email } });
     } catch (err) {
       setError(err.message || 'Failed to create an account. Please try again.');
     } finally {

@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useAuth } from '../contexts/AuthContext';
 import { useNavigate } from 'react-router-dom';
-import { resendVerificationEmail } from '../services/authService';
+import { resendOtp } from '../services/authService';
 import './SignIn.css';
 
 const SignIn = () => {
@@ -21,7 +21,12 @@ const SignIn = () => {
       setError('');
       setNeedsVerify(false);
       setLoading(true);
-      await login(email, password);
+      const result = await login(email, password);
+      // If backend says needs verification, go to OTP page
+      if (result?.needsVerification) {
+        navigate('/verify-otp', { state: { email } });
+        return;
+      }
       navigate('/');
     } catch (err) {
       if (err.message?.includes('verify') || err.message?.includes('verification')) {
@@ -35,8 +40,7 @@ const SignIn = () => {
 
   const handleResend = async () => {
     try {
-      const data = await resendVerificationEmail(email);
-      setResendMsg(data.message || 'Verification email sent!');
+      navigate('/verify-otp', { state: { email } });
     } catch (err) {
       setResendMsg(err.message || 'Failed to resend.');
     }

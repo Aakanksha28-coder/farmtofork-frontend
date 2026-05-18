@@ -26,6 +26,7 @@ import NearbyFarmers from './pages/NearbyFarmers';
 import Chatbot from './components/Chatbot';
 import PoojaProducts from './pages/PoojaProducts';
 import VerifyEmail from './pages/VerifyEmail';
+import VerifyOtp from './pages/VerifyOtp';
 
 function App() {
   const [isDrawerOpen, setIsDrawerOpen] = React.useState(false);
@@ -70,6 +71,7 @@ function App() {
             <Route path="/signin" element={<SignIn />} />
             <Route path="/signup" element={<SignUp />} />
             <Route path="/verify-email" element={<VerifyEmail />} />
+            <Route path="/verify-otp" element={<VerifyOtp />} />
             <Route path="/about" element={<About />} />
             <Route path="/features" element={<FeaturesPage />} />
             <Route path="/market-prices" element={<MarketPrices />} />
